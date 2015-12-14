@@ -4,36 +4,25 @@ import { curry } from '../../index';
 
 describe('curry', () => {
 
-  const add = (a, b, c) => {
-    return a + b + c;
-  };
+  const add = (a, b, c) => a + b + c;
 
   it('should return a function', () => {
-    const actual = typeof curry(() => {});
-    const expected = 'function';
+    const actual = curry(() => {});
 
-    expect(actual).to.equal(expected);
+    expect(actual).to.be.a('function');
   });
+  
+  derscribe('input validations', () => {\
 
-  it('should throw an error if supplied argument is not a function (1)', () => {
-    const actual = () => { curry(); };
+    [undefined, 'String.', 123].forEach((arg, index) => {
+      it(`should throw an error if supplied argument is not a function (${index})`, () => {
+        const actual = () => { curry(arg); };
+    
+        expect(actual).to.throw(Error);
+        expect(actual).to.throw('Supplied argument is not a function.');
+      });
+    });
 
-    expect(actual).to.throw(Error);
-    expect(actual).to.throw('Supplied argument is not a function.');
-  });
-
-  it('should throw an error if supplied argument is not a function (2)', () => {
-    const actual = () => { curry('String.'); };
-
-    expect(actual).to.throw(Error);
-    expect(actual).to.throw('Supplied argument is not a function.');
-  });
-
-  it('should throw an error if supplied argument is not a function (3)', () => {
-    const actual = () => { curry(123); };
-
-    expect(actual).to.throw(Error);
-    expect(actual).to.throw('Supplied argument is not a function.');
   });
 
   it('should return proper result when called with original number of arguments', () => {
@@ -58,8 +47,9 @@ describe('curry', () => {
     const curriedA = curry(add);
     const curriedB = curry(add);
 
+    expect(curriedA).not.to.be(curriedB);
+
     expect(curriedA(1)(2)(3)).to.equal(6);
     expect(curriedB(1)(2)(3)).to.equal(6);
   });
-
 });
